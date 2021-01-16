@@ -10,17 +10,17 @@ const createReader = (req, res) => {
   const newReader = req.body;
   Reader
     .create(newReader)
-    .then(newReaderCreated => {
-      console.log(newReaderCreated);
-      if (newReaderCreated.password > 8) {
+    .catch(error => {
+      console.log(error)
+      if (error.errors.ValidationErrorItem.message === 'Password is not valid') {
         res.status(404).json({ error: 'Password must be at least 9 characters' });
       }
-      else if (newReaderCreated.isEmail = false) {
+      else (error.errors.ValidationErrorItem.message === 'Validation isEmail on email failed') {
         res.status(404).json({ error: 'Email must be valid email format' });
       }
-      else {
-        res.status(201).json(newReaderCreated);
-      }
+    })
+    .then(newReaderCreated => {
+      res.status(201).json(newReaderCreated)
     })
 }
 
