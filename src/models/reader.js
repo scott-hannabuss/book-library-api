@@ -1,7 +1,19 @@
 module.exports = (sequelize, DataTypes) => {
   const schema = {
-    email: DataTypes.STRING,
-    name: DataTypes.STRING,
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      isEmail: true
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      min: 8
+    },
   };
 
   return sequelize.define('Reader', schema);

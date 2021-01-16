@@ -8,10 +8,20 @@ const getReaders = (_, res) => {
 
 const createReader = (req, res) => {
   const newReader = req.body;
-
   Reader
     .create(newReader)
-    .then(newReaderCreated => res.status(201).json(newReaderCreated));
+    .then(newReaderCreated => {
+      console.log(newReaderCreated);
+      if (newReaderCreated.password > 8) {
+        res.status(404).json({ error: 'Password must be at least 9 characters' });
+      }
+      else if (newReaderCreated.isEmail = false) {
+        res.status(404).json({ error: 'Email must be valid email format' });
+      }
+      else {
+        res.status(201).json(newReaderCreated);
+      }
+    })
 }
 
 const updateReader = (req, res) => {
@@ -23,14 +33,15 @@ const updateReader = (req, res) => {
     .then(([recordsUpdated]) => {
       if (!recordsUpdated) {
         res.status(404).json({ error: 'The reader could not be found.' });
-    } else {
-      Reader.findByPk(id).then((updatedReader) => {
-        res
-        .status(200)
-        .json(updatedReader);
-    }
-      )}
-  });
+      } else {
+        Reader.findByPk(id).then((updatedReader) => {
+          res
+            .status(200)
+            .json(updatedReader);
+        }
+        )
+      }
+    });
 }
 
 const getReaderById = (req, res) => {
@@ -62,9 +73,9 @@ const deleteReader = (req, res) => {
           .destroy({ where: { id } })
           .then(() => {
             res.status(204).send();
-        });
-    }
-  });
+          });
+      }
+    });
 }
 
 module.exports = {
