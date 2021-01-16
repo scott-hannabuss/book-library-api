@@ -11,11 +11,11 @@ const createReader = (req, res) => {
   Reader
     .create(newReader)
     .catch(error => {
-      console.log(error)
-      if (error.errors.ValidationErrorItem.message === 'Password is not valid') {
+      console.log(error.errors.message)
+      if (error.errors.message === 'Validation min on password failed') {
         res.status(404).json({ error: 'Password must be at least 9 characters' });
       }
-      else (error.errors.ValidationErrorItem.message === 'Validation isEmail on email failed') {
+      else if (error.errors.message === 'Validation isEmail on email failed') {
         res.status(404).json({ error: 'Email must be valid email format' });
       }
     })
