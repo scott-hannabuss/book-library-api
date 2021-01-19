@@ -28,10 +28,10 @@ describe('/readers', () => {
         const response = await request(app).post('/readers').send({
           name: 'Elizabeth Bennet',
           email: 'future_ms_darcy@gmail.com',
-          password: '1234',
+          password: '1',
         })
-        expect(response.status).to.equal(404);
-        expect(response.body.error).to.equal('Password must be at least 9 characters')
+        expect(response.status).to.equal(422);
+        expect(response.body[0]).to.equal('Validation min on password failed')
       });
       it('fails if email is incorrect format', async () => {
         const response = await request(app).post('/readers').send({
@@ -39,9 +39,9 @@ describe('/readers', () => {
           email: 'future_ms_darcygmail',
           password: '123456789',
         });
-        console.log(response);
-        expect(response.status).to.equal(404);
-        expect(response.body.error).to.equal('Email must be valid email format')
+        console.log(response.body);
+        expect(response.status).to.equal(422);
+        expect(response.body[0]).to.equal('Validation isEmail on email failed')
       });
     });
   });

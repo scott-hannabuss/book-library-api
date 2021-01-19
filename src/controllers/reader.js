@@ -10,19 +10,14 @@ const createReader = (req, res) => {
   const newReader = req.body;
   Reader
     .create(newReader)
-    .catch(error => {
-      console.log(error.errors.message)
-      if (error.errors.message === 'Validation min on password failed') {
-        res.status(404).json({ error: 'Password must be at least 9 characters' });
-      }
-      else if (error.errors.message === 'Validation isEmail on email failed') {
-        res.status(404).json({ error: 'Email must be valid email format' });
-      }
-    })
     .then(newReaderCreated => {
       res.status(201).json(newReaderCreated)
     })
-}
+    .catch((Error) => {
+      const Errors = Error.errors.map((thisError) => thisError.message);
+      res.status(422).json(Errors);
+    });
+};
 
 const updateReader = (req, res) => {
   const { id } = req.params;
