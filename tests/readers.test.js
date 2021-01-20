@@ -39,7 +39,6 @@ describe('/readers', () => {
           email: 'future_ms_darcygmail',
           password: '123456789',
         });
-        console.log(response.body);
         expect(response.status).to.equal(422);
         expect(response.body[0]).to.equal('Validation isEmail on email failed')
       });

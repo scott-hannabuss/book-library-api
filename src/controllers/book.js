@@ -8,10 +8,13 @@ const getBooks = (_, res) => {
 
 const createBook = (req, res) => {
     const newBook = req.body;
-
     Book
         .create(newBook)
-        .then(newBookCreated => res.status(201).json(newBookCreated));
+        .then(newBookCreated => res.status(201).json(newBookCreated))
+        .catch((Error) => {
+            const Errors = Error.errors.map((thisError) => thisError.message);
+            res.status(422).json(Errors);
+        });
 }
 
 const updateBook = (req, res) => {
