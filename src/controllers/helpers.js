@@ -1,4 +1,4 @@
-const { Book, Reader } = require('../models');
+const { Book, Reader, Author, Genre } = require('../models');
 
 const get404Error = (model) => ({ error: `The ${model} could not be found.` });
 
@@ -6,6 +6,8 @@ const getModel = (model) => {
     const models = {
         book: Book,
         reader: Reader,
+        author: Author,
+        genre: Genre,
     };
 
     return models[model];
@@ -36,12 +38,19 @@ const createItem = (res, model, item) => {
     const Model = getModel(model);
 
     return Model.create(item)
-        .then((newItemCreated) => {
+        .then(newItemCreated => {
             const itemWithoutPassword = removePassword(newItemCreated.dataValues);
+            res.status(201).json(itemWithoutPassword)
+        })
 
-            res.status(201).json(itemWithoutPassword);
+        .catch((Error) => {
+            const Errors = Error.errors.map((thisError) => thisError.message);
+            res.status(422).json(Errors);
         })
 }
+
+
+
 
 const updateItem = (res, model, item, id) => {
     const Model = getModel(model);
@@ -66,7 +75,6 @@ const getItemById = (res, model, id) => {
         if (!item) {
             res.status(404).json(get404Error(model));
         } else {
-            res.status(200).json(item);
             const itemWithoutPassword = removePassword(item.dataValues);
 
             res.status(200).json(itemWithoutPassword);

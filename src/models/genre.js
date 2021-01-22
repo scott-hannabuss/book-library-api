@@ -1,10 +1,10 @@
 module.exports = (sequelize, DataTypes) => {
     const schema = {
-        title: {
+        name: {
             type: DataTypes.STRING,
             allowNull: false,
         },
     };
 
-    return sequelize.define('Book', schema);
+    return sequelize.define('Genre', schema);
 };
