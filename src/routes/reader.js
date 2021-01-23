@@ -10,7 +10,7 @@ router
 
 router
   .route('/:id')
-  .get(readerController.getReaderById)
+  .get(readerController.getReader)
   .patch(readerController.updateReader)
   .delete(readerController.deleteReader);
 

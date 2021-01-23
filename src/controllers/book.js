@@ -1,26 +1,25 @@
 const {
-    getAllItems,
+    getAllBooks,
     createItem,
     updateItem,
-    getItemById,
+    getBookById,
     deleteItem,
 } = require('./helpers');
 
-const getBooks = (_, res) => getAllItems(res, 'book');
+const getBooks = (_, res) => getAllBooks(res, 'book');
 
 const createBook = (req, res) => createItem(res, 'book', req.body);
 
-const updateBook = (req, res) =>
-    updateItem(res, 'book', req.body, req.params.id);
+const updateBook = (req, res) => updateItem(res, 'book', req.body, req.params.id);
 
-const getBookById = (req, res) => getItemById(res, 'book', req.params.id);
+const getBook = (req, res) => getBookById(res, 'book', req.params.id);
 
 const deleteBook = (req, res) => deleteItem(res, 'book', req.params.id);
 
 module.exports = {
     getBooks,
-    getBookById,
+    getBook,
     createBook,
     updateBook,
-    deleteBook
+    deleteBook,
 }

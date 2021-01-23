@@ -1,67 +1,81 @@
 /* eslint-disable no-console */
 const { expect } = require('chai');
 const request = require('supertest');
-const { Book } = require('../src/models');
+const { Book, Genre, Author, Reader } = require('../src/models');
 const app = require('../src/app');
 
 describe('/books', () => {
-    before(async () => Book.sequelize.sync());
-
-    describe('with no records in the database', () => {
-        describe('POST /books', () => {
-            it('creates a new book in the database', async () => {
-                const response = await request(app).post('/books').send({
-                    title: 'Infinite Jest',
-                });
-                const newBookRecord = await Book.findByPk(response.body.id, {
-                    raw: true,
-                });
-
-                expect(response.status).to.equal(201);
-                expect(response.body.title).to.equal('Infinite Jest');
-            });
-        });
-
-        it('fails if title is null', async () => {
-            const response = await request(app).post('/books').send({
-                title: null,
-            });
-            expect(response.status).to.equal(422);
-            expect(response.body[0]).to.equal('Book.title cannot be null')
-        });
-    });
-});
-
-
-describe('with books in the database', () => {
     let books;
+    let genres;
+    let authors;
+    before(async () => {
+        try {
+            await Book.sequelize.sync();
 
+        } catch (err) {
+            console.log(err);
+        }
+    });
     beforeEach(async () => {
-        await Book.destroy({ where: {} });
+        try {
+            await Book.destroy({ where: {} });
+            await Genre.destroy({ where: {} });
+            await Author.destroy({ where: {} })
+            reader = await Reader.create({
+                name: "Jane Doe",
+                email: "J_Doe@email.com",
+                password: "Password1"
+            });
+            genres = await Promise.all([
+                Genre.create({ name: "Postmodern" }),
+                Genre.create({ name: "Graphic Novel" }),
+                Genre.create({ name: "Science Fiction" })
+            ]);
+            authors = await Promise.all([
+                Author.create({ name: "David Foster Wallace" }),
+                Author.create({ name: "Alan Moore" }),
+                Author.create({ name: "Frank Herbert" })
+            ])
+            books = await Promise.all([
+                Book.create({ title: "Infinite Jest", AuthorId: authors[0].id, GenreId: genres[0].id, ReaderId: reader.id, ISBN: "1234" }),
+                Book.create({ title: "Watchmen", AuthorId: authors[1].id, GenreId: genres[1].id, ReaderId: reader.id, ISBN: "4321" }),
+                Book.create({ title: "Dune", AuthorId: authors[2].id, GenreId: genres[2].id, ReaderId: reader.id, ISBN: "9876" }),
+            ]);
+        } catch (err) {
+            console.log(err);
+        }
 
-        books = await Promise.all([
-            Book.create({
-                title: 'Dune',
-                ISBN: '9780',
-            }),
-            Book.create({
-                title: 'Ulysses',
-                ISBN: '1234',
-            }),
-            Book.create({
-                title: 'Watchmen',
-                ISBN: '9876',
-            }),
-        ]);
+        describe('with no records in the database', () => {
+            describe('POST /books', () => {
+                it('creates a new book in the database', async () => {
+                    const response = await request(app).post('/books').send({
+                        title: 'Infinite Jest',
+                    });
+                    const newBookRecord = await Book.findByPk(response.body.id, {
+                        raw: true,
+                    });
+
+                    expect(response.status).to.equal(201);
+                    expect(response.body.title).to.equal('Infinite Jest');
+                });
+            });
+
+            it('fails if title is null', async () => {
+                const response = await request(app).post('/books').send({
+                    title: null,
+                });
+                expect(response.status).to.equal(422);
+                expect(response.body[0]).to.equal('Book.title cannot be null')
+            });
+        });
     });
 
     describe('GET /books', () => {
         it('gets all book records', async () => {
             const response = await request(app).get('/books');
-
+            console.log(response);
             expect(response.status).to.equal(200);
             expect(response.body.length).to.equal(3);
-
             response.body.forEach((book) => {
                 const expected = books.find((a) => a.id === book.id);
 
@@ -128,3 +142,4 @@ describe('with books in the database', () => {
         });
     });
 });
+

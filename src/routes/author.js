@@ -10,7 +10,7 @@ router
 
 router
     .route('/:id')
-    .get(authorController.getAuthorById)
+    .get(authorController.getAuthor)
     .patch(authorController.updateAuthor)
     .delete(authorController.deleteAuthor);
 

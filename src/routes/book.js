@@ -10,7 +10,7 @@ router
 
 router
     .route('/:id')
-    .get(bookController.getBookById)
+    .get(bookController.getBook)
     .patch(bookController.updateBook)
     .delete(bookController.deleteBook);
 

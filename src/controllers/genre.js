@@ -1,26 +1,25 @@
 const {
-    getAllItems,
+    getAllGenresorAuthors,
     createItem,
     updateItem,
-    getItemById,
     deleteItem,
+    getGenreorAuthorById,
 } = require('./helpers');
 
-const getGenre = (_, res) => getAllItems(res, 'genre');
+const getGenres = (_, res) => getAllGenresorAuthors(res, 'genre');
 
 const createGenre = (req, res) => createItem(res, 'genre', req.body);
 
-const updateGenre = (req, res) =>
-    updateItem(res, 'genre', req.body, req.params.id);
+const updateGenre = (req, res) => updateItem(res, 'genre', req.body, req.params.id);
 
-const getGenreById = (req, res) => getItemById(res, 'genre', req.params.id);
+const getGenre = (req, res) => getGenreorAuthorById(res, 'genre', req.params.id);
 
 const deleteGenre = (req, res) => deleteItem(res, 'genre', req.params.id);
 
 module.exports = {
+    getGenres,
     getGenre,
-    getGenreById,
     createGenre,
     updateGenre,
-    deleteGenre
+    deleteGenre,
 }

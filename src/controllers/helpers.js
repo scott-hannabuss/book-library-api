@@ -22,10 +22,10 @@ const removePassword = (obj) => {
 };
 
 
-const getAllItems = (res, model) => {
+const getAllGenresorAuthors = (res, model) => {
     const Model = getModel(model);
 
-    return Model.findAll().then((items) => {
+    return Model.findAll({ include: Book }).then((items) => {
         const itemsWithoutPassword = items.map((item) =>
             removePassword(item.dataValues)
         );
@@ -33,6 +33,67 @@ const getAllItems = (res, model) => {
     });
 };
 
+const getAllBooks = (res, model) => {
+
+    const Model = getModel(model);
+
+    return Model.findAll({ include: [Reader, Genre, Author] }).then((items) => {
+        res.status(200).json(items);
+    })
+        .catch(error => { console.log(error) })
+};
+
+const getAllReaders = (res, model) => {
+
+    const Model = getModel(model);
+
+    return Model.findAll({ include: Book }).then((items) => {
+        const itemsWithoutPassword = items.map((item) =>
+            removePassword(item.dataValues)
+        );
+        res.status(200).json(itemsWithoutPassword);
+    })
+        .catch(error => { console.log(error) })
+};
+
+const getGenreorAuthorById = (res, model, id) => {
+    const Model = getModel(model);
+    return Model.findByPk(id, { include: Book }).then((item) => {
+        if (!item) {
+            res.status(404).json(get404Error(model));
+        } else {
+            const itemWithoutPassword = removePassword(item.dataValues);
+
+            res.status(200).json(itemWithoutPassword)
+        }
+    });
+};
+
+const getBookById = (res, model, id) => {
+    const Model = getModel(model);
+    return Model.findByPk(id, { include: [Reader, Genre, Author] }).then((item) => {
+        if (!item) {
+            res.status(404).json(get404Error(model));
+        } else {
+            const itemWithoutPassword = removePassword(item.dataValues);
+
+            res.status(200).json(itemWithoutPassword)
+        }
+    });
+};
+
+const getReaderById = (res, model, id) => {
+    const Model = getModel(model);
+    return Model.findByPk(id, { include: Book }).then((item) => {
+        if (!item) {
+            res.status(404).json(get404Error(model));
+        } else {
+            const itemWithoutPassword = removePassword(item.dataValues);
+
+            res.status(200).json(itemWithoutPassword)
+        }
+    });
+};
 
 const createItem = (res, model, item) => {
     const Model = getModel(model);
@@ -69,18 +130,6 @@ const updateItem = (res, model, item, id) => {
 };
 
 
-const getItemById = (res, model, id) => {
-    const Model = getModel(model);
-    return Model.findByPk(id).then((item) => {
-        if (!item) {
-            res.status(404).json(get404Error(model));
-        } else {
-            const itemWithoutPassword = removePassword(item.dataValues);
-
-            res.status(200).json(itemWithoutPassword);
-        }
-    });
-};
 
 const deleteItem = (res, model, id) => {
     const Model = getModel(model);
@@ -97,9 +146,13 @@ const deleteItem = (res, model, id) => {
 };
 
 module.exports = {
-    getAllItems,
+    getAllGenresorAuthors,
     createItem,
     updateItem,
-    getItemById,
+    getReaderById,
+    getBookById,
+    getGenreorAuthorById,
     deleteItem,
+    getAllBooks,
+    getAllReaders,
 };

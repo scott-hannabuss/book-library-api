@@ -5,12 +5,12 @@ const genreController = require('../controllers/genre');
 
 router
     .route('/')
-    .get(genreController.getGenre)
+    .get(genreController.getGenres)
     .post(genreController.createGenre);
 
 router
     .route('/:id')
-    .get(genreController.getGenreById)
+    .get(genreController.getGenre)
     .patch(genreController.updateGenre)
     .delete(genreController.deleteGenre);
 

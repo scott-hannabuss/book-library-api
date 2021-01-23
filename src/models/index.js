@@ -17,7 +17,14 @@ const setupDatabase = () => {
   const Reader = ReaderModel(sequelize, Sequelize);
   const Book = BookModel(sequelize, Sequelize);
   const Author = AuthorModel(sequelize, Sequelize);
-  const Genre = GenreModel(sequelize, Sequelize)
+  const Genre = GenreModel(sequelize, Sequelize);
+
+  Genre.hasMany(Book);
+  Book.belongsTo(Genre);
+  Author.hasMany(Book);
+  Book.belongsTo(Author);
+  Reader.hasMany(Book);
+  Book.belongsTo(Reader);
 
   sequelize.sync({ alter: true });
   return {
