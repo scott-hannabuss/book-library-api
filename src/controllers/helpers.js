@@ -13,6 +13,8 @@ const getModel = (model) => {
     return models[model];
 };
 
+// function to ensure password is not returned in response
+
 const removePassword = (obj) => {
     if (obj.hasOwnProperty('password')) {
         delete obj.password;

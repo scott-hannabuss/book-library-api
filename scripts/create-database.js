@@ -1,4 +1,5 @@
-/* eslint-disable no-console */
+// creates database from outset of app running as express cannot send data to an empty database
+
 const mysql = require('mysql2');
 const path = require('path');
 

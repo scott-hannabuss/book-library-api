@@ -1,3 +1,5 @@
+// destroys test database so that it does not become populated with multiple instances of the same data
+
 const mysql = require('mysql2');
 const path = require('path');
 

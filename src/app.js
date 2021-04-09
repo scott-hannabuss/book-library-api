@@ -8,6 +8,8 @@ const app = express();
 
 app.use(express.json());
 
+// dictates which routes should be used when certain URLs are entered 
+
 app.use('/readers', readerRouter);
 
 app.use('/books', bookRouter)
